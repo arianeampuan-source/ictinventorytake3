@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>ICT Inventory</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="header">
+        <h1> ICT Laboratory Inventory</h1>
+
+        <button class="rick-btn" onclick="rickRoll()">🎁 Surprise</button>
+        <p class="secret" onclick="rickRoll()">Click here for system update</p>
+
+    </div>
+
+    <div class="main">
+
+        <div class="card">
+
+            <h2>Add Equipment</h2>
+
+            <input type="text" id="name" placeholder="Equipment Name">
+            <input type="number" id="qty" placeholder="Quantity">
+
+            <select id="condition">
+                <option>Good</option>
+                <option>Needs Repair</option>
+                <option>Damaged</option>
+            </select>
+
+            <button onclick="addItem()">Add Equipment</button>
+
+        </div>
+
+        <div class="card">
+
+            <h2>Equipment List</h2>
+
+            <input type="text" id="search" placeholder="Search..." onkeyup="searchItem()">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Equipment</th>
+                        <th>Quantity</th>
+                        <th>Condition</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody id="table"></tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    <script>
+
+        let inventory = JSON.parse(localStorage.getItem("inventory")) || []
+
+        function display() {
+
+            let table = document.getElementById("table")
+            table.innerHTML = ""
+
+            inventory.forEach((item, index) => {
+
+                let row = `<tr>
+<td>${item.name}</td>
+<td>${item.qty}</td>
+<td>${item.condition}</td>
+<td><button class="delete" onclick="deleteItem(${index})">Delete</button></td>
+</tr>`
+
+                table.innerHTML += row
+
+            })
+
+            localStorage.setItem("inventory", JSON.stringify(inventory))
+
+        }
+
+        function addItem() {
+
+            let name = document.getElementById("name").value
+            let qty = document.getElementById("qty").value
+            let condition = document.getElementById("condition").value
+
+            if (name == "" || qty == "") {
+                alert("Please fill all fields")
+                return
+            }
+
+            inventory.push({ name, qty, condition })
+
+            display()
+
+        }
+
+        function deleteItem(i) {
+            inventory.splice(i, 1)
+            display()
+        }
+
+        function searchItem() {
+
+            let search = document.getElementById("search").value.toLowerCase()
+            let rows = document.querySelectorAll("#table tr")
+
+            rows.forEach(row => {
+                let text = row.innerText.toLowerCase()
+                row.style.display = text.includes(search) ? "" : "none"
+            })
+
+        }
+
+        function rickRoll() {
+            window.open("https://www.youtube.com/watch?v=dQw4w9WgXcQ", "_blank")
+        }
+
+        display()
+
+    </script>
+
+</body>
+
+</html>
